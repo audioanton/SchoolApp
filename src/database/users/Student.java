@@ -1,50 +1,49 @@
 package database.users;
 import database.Subject;
-import database.util.Displayable;
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
 
-public class Student implements Displayable, Serializable, Users {
-    HashMap<String, String> guardians;
-    List<Subject> subjects;
+public class Student implements Serializable, Users {
+    String[] guardianContacts;
+    private final int ID;
+    private final String username;
 
-
-    public Student(String username, List<Subject> subjects, int ID) {
-
+    public Student(String username, int ID) {
+        this.username = username;
+        this.ID = ID;
     }
 
-    public void addGuardian(String name, String email) {
-        if (guardians == null)
-            guardians = new HashMap<>();
-        guardians.put(name, email);
+    public Student(String username, int ID, String email_1, String email_2) {
+        this.username = username;
+        this.ID = ID;
+        this.guardianContacts = new String[]{email_1, email_2};
     }
 
     @Override
-    public void showSubjects() {
-
+    public void showSubjects(List<Subject> subjects) {
+        System.out.println("All subjects");
     }
 
-    public void showAssignments() {
+    @Override
+    public void showAssignments(List<Subject> subjects) {
+        System.out.println("All assignments");
     }
 
     @Override
     public int getID() {
-        return 0;
+        return ID;
     }
 
     @Override
     public String getUsername() {
-        return "";
-    }
-
-    @Override
-    public void display() {
-
+        return username;
     }
 
     @Override
     public void showOptions() {
+        System.out.println("Student menu:");
+        System.out.println("1 = Save and Exit");
+        System.out.println("2 = Show Subjects");
     }
 
 }

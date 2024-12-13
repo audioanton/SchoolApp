@@ -1,35 +1,23 @@
 package database.users;
-import database.Register;
-import database.util.Displayable;
-
 import java.io.Serializable;
+import java.util.List;
 
-public class Administrator implements Displayable, Serializable, Users {
-    private int ID;
-    private String username;
-    private Register register;
+public class Administrator implements Serializable, Users {
+    private final int ID;
+    private final String username;
 
-    public Administrator(String username, Register register, int ID) {
+    public Administrator(String username, int ID) {
         this.username = username;
-        this.register = register;
         this.ID = ID;
     }
 
     @Override
-    public void display() {
-        System.out.println("All students per class");
-        System.out.println("All students");
-    }
-
-    @Override
     public void showOptions() {
+        System.out.println("Administrator menu:");
+        System.out.println("1 = Save and Exit");
     }
 
-    @Override
-    public void showSubjects() {
-    }
-
-    public void showStudents() {}
+    public void showStudents(List<Users> users) {}
 
     @Override
     public int getID() {
@@ -41,6 +29,14 @@ public class Administrator implements Displayable, Serializable, Users {
         return username;
     }
 
-    public void createUser(UsersTypes type, String username) {
+    @Override
+    public void createUser(List<Users> users) {
+
     }
+
+    @Override
+    public void removeUser(List<Users> users) {
+
+    }
+
 }

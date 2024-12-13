@@ -1,46 +1,51 @@
 package database.users;
 import database.Subject;
-import database.util.Displayable;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class Teacher implements Displayable, Serializable, Users {
-    private String username;
-    private int ID;
-    private List<Subject> subjects;
+public class Teacher implements Serializable, Users {
+    private final String username;
+    private final int ID;
 
-    public Teacher(String username, List<Subject> subjects, int ID) {
+    public Teacher(String username, int ID) {
         this.username = username;
-        this.subjects = subjects;
         this.ID = ID;
     }
 
     @Override
-    public void display() {
-        System.out.println("All subjects");
-        System.out.println("All students per subject");
-    }
-
-    @Override
     public void showOptions() {
+        System.out.println("Teacher menu:");
+        System.out.println("1 = Save and Exit");
     }
 
     @Override
-    public void showSubjects() {
-    }
-
-    public void showAssignments() {
+    public void showSubjects(List<Subject> subjects) {
 
     }
 
     @Override
     public int getID() {
-        return 0;
+        return ID;
     }
 
     @Override
     public String getUsername() {
-        return "";
+        return username;
+    }
+
+    @Override
+    public void showAssignments(List<Subject> subjects) {
+        Users.super.showAssignments(subjects);
+    }
+
+    @Override
+    public void createAssignment(List<Subject> subjects) {
+        Users.super.createAssignment(subjects);
+    }
+
+    @Override
+    public void setGrade(List<Subject> subjects) {
+        Users.super.setGrade(subjects);
     }
 }

@@ -5,15 +5,19 @@ import java.util.*;
 
 public class School {
     private Scanner scanner;
-    UserMaker user; //ersätta med ID?
+    UserFactory userFactory;
+    Users user;
     Register register;
 
     public School() {
         scanner = new Scanner(System.in);
+        userFactory = new UserFactory();
+        register = new Register();
     }
 
     public void runProgram() {
         loadSchool();
+        initUsers();
 
         while (user == null) {
             try {
@@ -25,7 +29,7 @@ public class School {
 
         while (true) {
             try {
-                showOptions();
+                user.showOptions();
                 String selection = scanner.nextLine().trim();
                 selectAction(selection);
             } catch (Exception e) {
@@ -39,41 +43,80 @@ public class School {
             saveAndExit();
         }
         else if (selection.equals("2")) {
-            user.showOptions();
+            user.showSubjects(register.getSubjects());
+        }
+        else if (selection.equals("3")) {
+            user.showAssignments(register.getSubjects());
+        }
+        else if (selection.equals("4") && user instanceof Administrator || user instanceof Teacher) {
+            user.showStudents(register.getUsers());
+        }
+        else if (selection.equals("5") && user instanceof Administrator) {
+            user.createUser(register.getUsers());
+        }
+        else if (selection.equals("5") && user instanceof Teacher) {
+            user.createAssignment(register.getSubjects());
+        }
+        else if (selection.equals("6") && user instanceof Administrator) {
+            user.removeUser(register.getUsers());
+        }
+        else if (selection.equals("6") && user instanceof Teacher) {
+            user.setGrade(register.getSubjects());
         }
         else {
-            System.out.println("Invalid selection.");
+            System.out.println("Invalid Selection.");
         }
     }
 
     public void validateUser() {
-        System.out.println("Please enter your username: ");
-        String username = scanner.nextLine();
-        System.out.println("Please enter userID: ");
-        String userID = scanner.nextLine();
-        int id = 0;
+        int id;
+        String username;
+
         try {
+            System.out.println("Please enter your username: ");
+            username = scanner.nextLine();
+            System.out.println("Please enter userID: ");
+            String userID = scanner.nextLine();
             id = Integer.parseInt(userID);
+            user = establishCurrentUser(id, username);
         } catch (NumberFormatException e) {
             System.out.println("Invalid userID");
+        } catch (NullPointerException e) {
+            System.out.println(e.getMessage());
         }
 
-        //validate is userID in register?
-            //is id and username match?
-            UsersTypes type = UsersTypes.ADMIN; //establish type //Student, Teacher
+    }
 
-        //instans av fabriken "userFactory"
-        user = new UserMaker(type, id, register); //factory istället.
-        user.showOptions();
-
-      //validate ID in database....
+    private Users establishCurrentUser(int ID, String username) {
+        Collections.sort(register.getUsers());
+        int index = Collections.binarySearch(register.getUsers(), new Student(username, ID));
+        if (index >= 0 && register.getUsers().get(index).getUsername().equals(username))
+            return register.getUsers().get(index);
+        else
+            throw new NullPointerException("No such user");
     }
 
 
     public void initUsers() {
-        register.initRegister();
+        if (register.getUsers().isEmpty()) {
 
-        //Factory-pattern add users.
+            register.getUsers().add(userFactory.createUser("Jamie", "1@gmail.com", "2@gmail.com"));
+            register.getUsers().add(userFactory.createUser("Kylie", "1@gmail.com", "2@gmail.com"));
+            register.getUsers().add(userFactory.createUser("Riley", "1@gmail.com", "2@gmail.com"));
+            register.getUsers().add(userFactory.createUser("Baney", "1@gmail.com", "2@gmail.com"));
+            register.getUsers().add(userFactory.createUser("Laney", "1@gmail.com", "2@gmail.com"));
+
+            register.getUsers().add(userFactory.createUser(UsersTypes.TEACHER, "Bob"));
+            register.getUsers().add(userFactory.createUser(UsersTypes.TEACHER, "Rob"));
+            register.getUsers().add(userFactory.createUser(UsersTypes.TEACHER, "Gob"));
+
+            register.getUsers().add(userFactory.createUser(UsersTypes.ADMIN, "Mogo"));
+        }
+
+        for (Users user : register.getUsers()) {
+            System.out.println(user.getUsername() + " " + user.getID());
+        }
+
     }
 
     public void saveAndExit() {
@@ -82,9 +125,5 @@ public class School {
     }
 
     public void loadSchool() {}
-
-    public void showOptions() {
-        user.showOptions();
-    }
 
 }
