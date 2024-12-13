@@ -1,5 +1,11 @@
 package database.users;
 
-public enum Users {
-    STUDENT, TEACHER, ADMIN;
+public interface Users {
+    void showOptions();
+
+    void showSubjects();
+
+    int getID();
+
+    String getUsername();
 }

@@ -1,22 +1,21 @@
+import database.Register;
 import database.users.*;
 
 import java.util.*;
 
 public class School {
     private Scanner scanner;
-    List<User> users;
-    User currentUser;
+    UserMaker user; //ersätta med ID?
+    Register register;
 
     public School() {
         scanner = new Scanner(System.in);
-        users = new ArrayList<>();
-        initUsers();
     }
 
     public void runProgram() {
         loadSchool();
-        System.out.println(users.getFirst().getUsername() + " " + users.getFirst().getId()); //Todo: delete this
-        while (currentUser == null) {
+
+        while (user == null) {
             try {
                 validateUser();
             } catch (Exception e) {
@@ -28,25 +27,19 @@ public class School {
             try {
                 showOptions();
                 String selection = scanner.nextLine().trim();
-                makeChoice(selection);
+                selectAction(selection);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
     }
 
-    public void makeChoice(String selection) {
-
+    public void selectAction(String selection) {
         if (selection.equals("1")) {
             saveAndExit();
         }
         else if (selection.equals("2")) {
-            if (currentUser instanceof Student)
-               ((Student) currentUser).display();
-            else if (currentUser instanceof Teacher)
-               ((Teacher) currentUser).display();
-            else
-                ((Administrator) currentUser).display();
+            user.showOptions();
         }
         else {
             System.out.println("Invalid selection.");
@@ -65,23 +58,22 @@ public class School {
             System.out.println("Invalid userID");
         }
 
-        for (User user : users) {
-            if (user.getId() == id && user.getUsername().equals(username)) {
-                this.currentUser = user;
-                break;
-            }
-        }
-        if (currentUser == null) {
-            throw new IllegalArgumentException("Incorrect username or ID");
-        }
+        //validate is userID in register?
+            //is id and username match?
+            UsersTypes type = UsersTypes.ADMIN; //establish type //Student, Teacher
+
+        //instans av fabriken "userFactory"
+        user = new UserMaker(type, id, register); //factory istället.
+        user.showOptions();
+
+      //validate ID in database....
     }
 
+
     public void initUsers() {
-        users.add(createUser(Users.ADMIN, "Jenny"));
-        users.add(createUser(Users.TEACHER, "Sara"));
-        users.add(createUser(Users.TEACHER, "Tom"));
-        users.add(createUser(Users.STUDENT, "Sam"));
-        users.add(createUser(Users.STUDENT, "Bingo"));
+        register.initRegister();
+
+        //Factory-pattern add users.
     }
 
     public void saveAndExit() {
@@ -92,19 +84,7 @@ public class School {
     public void loadSchool() {}
 
     public void showOptions() {
-        currentUser.showOptions();
+        user.showOptions();
     }
 
-    public User createUser(Users type, String username) {
-        for (User user : users) {
-            if (user.getUsername().equals(username))
-                throw new IllegalArgumentException("Username already exists");
-        }
-
-        return switch (type) {
-            case Users.STUDENT -> new Student(username);
-            case Users.TEACHER -> new Teacher(username);
-            case Users.ADMIN -> new Administrator(username);
-        };
-    }
 }

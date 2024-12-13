@@ -1,12 +1,18 @@
 package database.users;
+import database.Register;
 import database.util.Displayable;
 
 import java.io.Serializable;
 
-public class Administrator extends User implements Displayable, Serializable {
+public class Administrator implements Displayable, Serializable, Users {
+    private int ID;
+    private String username;
+    private Register register;
 
-    public Administrator(String username) {
-        super(User.getNextId(), username);
+    public Administrator(String username, Register register, int ID) {
+        this.username = username;
+        this.register = register;
+        this.ID = ID;
     }
 
     @Override
@@ -17,8 +23,24 @@ public class Administrator extends User implements Displayable, Serializable {
 
     @Override
     public void showOptions() {
-        for (String s : this.options) {
-            System.out.println(s);
-        }
+    }
+
+    @Override
+    public void showSubjects() {
+    }
+
+    public void showStudents() {}
+
+    @Override
+    public int getID() {
+        return ID;
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    public void createUser(UsersTypes type, String username) {
     }
 }
