@@ -1,4 +1,5 @@
 package database.users;
+import database.Register;
 import database.Subject;
 
 import java.io.Serializable;
@@ -40,12 +41,11 @@ public class Teacher implements Serializable, Users {
     }
 
     @Override
-    public void createAssignment(List<Subject> subjects) {
-        Users.super.createAssignment(subjects);
+    public void createAssignment(Register register) {
+
     }
 
     @Override
-    public void setGrade(List<Subject> subjects) {
-        Users.super.setGrade(subjects);
+    public void setGrade(Register register) {
     }
 }

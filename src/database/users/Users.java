@@ -1,6 +1,6 @@
 package database.users;
 
-import database.Assignment;
+import database.Register;
 import database.Subject;
 
 import java.util.List;
@@ -21,13 +21,13 @@ public interface Users extends Comparable<Users> {
 
     default void showAssignments(List<Subject> subjects) {}
 
-    default void createUser(List<Users> users) {}
+    default void editUser(Register register, UserFactory factory) {}
 
-    default void removeUser(List<Users> users) {}
+    default void showUsers(List<Users> users) {}
 
-    default void showStudents(List<Users> users) {}
+    default void createAssignment(Register register) {}
 
-    default void createAssignment(List<Subject> subjects) {}
+    default void setGrade(Register register) {}
 
-    default void setGrade(List<Subject> subjects) {}
+    default void editStudentClasses(Register register) {}
 }

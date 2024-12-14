@@ -21,12 +21,22 @@ public class Student implements Serializable, Users {
 
     @Override
     public void showSubjects(List<Subject> subjects) {
-        System.out.println("All subjects");
+        System.out.println(username + " subjects:");
+        for (Subject subject : subjects) {
+            if (subject.getStudentResults().containsKey(ID)) {
+                System.out.println(subject.getTitle());
+                System.out.println(subject.getStudentResults().get(ID));
+            }
+        }
     }
 
     @Override
     public void showAssignments(List<Subject> subjects) {
-        System.out.println("All assignments");
+        System.out.println(username + " assignments:");
+        for (Subject subject : subjects) {
+            if (subject.getStudentResults().containsKey(ID))
+                System.out.println(subject.getAssignment().toString());
+        }
     }
 
     @Override
@@ -44,6 +54,7 @@ public class Student implements Serializable, Users {
         System.out.println("Student menu:");
         System.out.println("1 = Save and Exit");
         System.out.println("2 = Show Subjects");
+        System.out.println("3 = Show Assignments");
     }
 
 }

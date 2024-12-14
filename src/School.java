@@ -1,4 +1,6 @@
 import database.Register;
+import database.Result;
+import database.Subject;
 import database.users.*;
 
 import java.util.*;
@@ -18,6 +20,7 @@ public class School {
     public void runProgram() {
         loadSchool();
         initUsers();
+        initSubjects();
 
         while (user == null) {
             try {
@@ -32,37 +35,44 @@ public class School {
                 user.showOptions();
                 String selection = scanner.nextLine().trim();
                 selectAction(selection);
+                showMenu();
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
     }
 
+    private void showMenu() {
+        System.out.println("Press any key to return to menu.");
+        scanner.nextLine();
+    }
+
     public void selectAction(String selection) {
         if (selection.equals("1")) {
             saveAndExit();
         }
-        else if (selection.equals("2")) {
+        else if (selection.equals("2") && user instanceof Student) {
             user.showSubjects(register.getSubjects());
         }
-        else if (selection.equals("3")) {
+        else if (selection.equals("3") && !(user instanceof Administrator)) {
             user.showAssignments(register.getSubjects());
         }
-        else if (selection.equals("4") && user instanceof Administrator || user instanceof Teacher) {
-            user.showStudents(register.getUsers());
+        else if (selection.equals("2") && !(user instanceof Student)) {
+            user.showUsers(register.getUsers());
         }
-        else if (selection.equals("5") && user instanceof Administrator) {
-            user.createUser(register.getUsers());
+        else if (selection.equals("3") && user instanceof Administrator) {
+            user.editUser(register, userFactory);
+        }
+        else if (selection.equals("4") && user instanceof Administrator) {
+            user.editStudentClasses(register);
+        }
+        else if (selection.equals("4") && user instanceof Teacher) {
+            user.createAssignment(register);
         }
         else if (selection.equals("5") && user instanceof Teacher) {
-            user.createAssignment(register.getSubjects());
+            user.setGrade(register);
         }
-        else if (selection.equals("6") && user instanceof Administrator) {
-            user.removeUser(register.getUsers());
-        }
-        else if (selection.equals("6") && user instanceof Teacher) {
-            user.setGrade(register.getSubjects());
-        }
+
         else {
             System.out.println("Invalid Selection.");
         }
@@ -96,10 +106,8 @@ public class School {
             throw new NullPointerException("No such user");
     }
 
-
     public void initUsers() {
         if (register.getUsers().isEmpty()) {
-
             register.getUsers().add(userFactory.createUser("Jamie", "1@gmail.com", "2@gmail.com"));
             register.getUsers().add(userFactory.createUser("Kylie", "1@gmail.com", "2@gmail.com"));
             register.getUsers().add(userFactory.createUser("Riley", "1@gmail.com", "2@gmail.com"));
@@ -116,7 +124,25 @@ public class School {
         for (Users user : register.getUsers()) {
             System.out.println(user.getUsername() + " " + user.getID());
         }
+    }
 
+    public void initSubjects() {
+        if (register.getSubjects().isEmpty()) {
+            register.getSubjects().add(new Subject("Geography", 6));
+            register.getSubjects().add(new Subject("Math", 6));
+            register.getSubjects().add(new Subject("English", 7));
+            register.getSubjects().add(new Subject("P.E", 7));
+            register.getSubjects().add(new Subject("Music", 8));
+            register.getSubjects().add(new Subject("History", 8));
+
+            for (Subject subject : register.getSubjects()) {
+                for (Users user : register.getUsers()) {
+                    if (!(user instanceof Student))
+                        continue;
+                    subject.addNewStudent(Result.INCOMPLETE, user.getID());
+                }
+            }
+        }
     }
 
     public void saveAndExit() {
