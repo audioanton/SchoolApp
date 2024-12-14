@@ -44,7 +44,7 @@ public class School {
 
     private void showMenu() {
         System.out.println("Press any key to return to menu.");
-        scanner.nextLine();
+        String s = scanner.nextLine();
     }
 
     public void selectAction(String selection) {
@@ -52,25 +52,25 @@ public class School {
             saveAndExit();
         }
         else if (selection.equals("2") && user instanceof Student) {
-            user.showSubjects(register.getSubjects());
-        }
-        else if (selection.equals("3") && !(user instanceof Administrator)) {
             user.showAssignments(register.getSubjects());
         }
         else if (selection.equals("2") && !(user instanceof Student)) {
             user.showUsers(register.getUsers());
         }
+        else if (selection.equals("3") && !(user instanceof Administrator)) {
+            user.showSubjects(register.getSubjects());
+        }
         else if (selection.equals("3") && user instanceof Administrator) {
-            user.editUser(register, userFactory);
+            user.editUser(register, userFactory, scanner);
         }
         else if (selection.equals("4") && user instanceof Administrator) {
-            user.editStudentClasses(register);
+            user.editStudentClasses(register, scanner);
         }
         else if (selection.equals("4") && user instanceof Teacher) {
-            user.createAssignment(register);
+            user.createAssignment(register, scanner);
         }
         else if (selection.equals("5") && user instanceof Teacher) {
-            user.setGrade(register);
+            user.setGrade(register, scanner);
         }
 
         else {

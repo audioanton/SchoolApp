@@ -4,6 +4,7 @@ import database.Register;
 import database.Subject;
 
 import java.util.List;
+import java.util.Scanner;
 
 public interface Users extends Comparable<Users> {
 
@@ -21,13 +22,13 @@ public interface Users extends Comparable<Users> {
 
     default void showAssignments(List<Subject> subjects) {}
 
-    default void editUser(Register register, UserFactory factory) {}
+    default void editUser(Register register, UserFactory factory, Scanner scanner) {}
 
     default void showUsers(List<Users> users) {}
 
-    default void createAssignment(Register register) {}
+    default void createAssignment(Register register, Scanner scanner) {}
 
-    default void setGrade(Register register) {}
+    default void setGrade(Register register, Scanner scanner) {}
 
-    default void editStudentClasses(Register register) {}
+    default void editStudentClasses(Register register, Scanner scanner) {}
 }

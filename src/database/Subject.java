@@ -14,6 +14,7 @@ public class Subject implements Serializable, Comparable<Subject> {
         studentResults = new HashMap<>();
         this.title = title;
         this.teacherID = teacherID;
+        this.assignment = new Assignment("-", "-");
     }
 
     public int getTeacherID() {return teacherID;}
@@ -26,6 +27,10 @@ public class Subject implements Serializable, Comparable<Subject> {
 
     public void addNewStudent(Result result, int ID) {
         studentResults.putIfAbsent(ID, result);
+    }
+
+    public void setAssignment(Assignment assignment) {
+        this.assignment = assignment;
     }
 
     public void setStudentResult(Result result, int ID) {

@@ -9,14 +9,13 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Administrator implements Serializable, Users {
-    Scanner scanner;
+
     private final int ID;
     private final String username;
 
     public Administrator(String username, int ID) {
         this.username = username;
         this.ID = ID;
-        scanner = new Scanner(System.in);
     }
 
     @Override
@@ -62,7 +61,7 @@ public class Administrator implements Serializable, Users {
     }
 
     @Override
-    public void editUser(Register register, UserFactory factory) {
+    public void editUser(Register register, UserFactory factory, Scanner scanner) {
         String username = "";
         String type = "";
         int i = -1;
@@ -112,7 +111,7 @@ public class Administrator implements Serializable, Users {
     }
 
     @Override
-    public void editStudentClasses(Register register) {
+    public void editStudentClasses(Register register, Scanner scanner) {
         try {
             System.out.println("Student ID: ");
             int ID = scanner.nextInt();

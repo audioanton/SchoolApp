@@ -2,29 +2,30 @@ package database;
 
 
 import java.io.Serializable;
+import java.util.HashMap;
 
 public class Assignment implements Serializable {
     private String title;
     private String description;
-    private Result result;
+    private HashMap<Integer, Result> studentResults;
 
     public Assignment(String title, String description) {
         this.title = title;
         this.description = description;
-        result = Result.INCOMPLETE;
+        studentResults = new HashMap<>();
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setGrade(Result result) {
-        this.result = result;
+    public void setGrade(Result result, int ID) {
+        studentResults.put(ID, result);
     }
 
     @Override
     public String toString() {
-        return String.format("%s\n\n%s\n\nGrade: %s", title, description, result.toString());
+        return String.format("%s\n%s\n", title, description);
     }
 
 }
