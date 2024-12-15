@@ -68,7 +68,6 @@ public class Administrator implements Serializable, Users {
 
         System.out.println("Add (a) or remove (r) user:");
         boolean add = scanner.nextLine().trim().startsWith("a");
-        System.out.println(register.getUsers().size());
 
         if (add) {
             System.out.println("Enter username:");

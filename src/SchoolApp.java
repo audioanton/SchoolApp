@@ -6,24 +6,34 @@ import database.Result;
 import database.Subject;
 import database.users.*;
 
+import java.io.*;
 import java.lang.reflect.Type;
 import java.util.*;
 
-public class School {
+public class SchoolApp implements Runnable {
     Gson gson;
     private Scanner scanner;
     UserFactory userFactory;
     Users user;
-    Register register;
+    private Register register;
+    private static Register sharedRegister;//blir inte synchroniserade...
 
-    public School() {
+    static SchoolApp instance; //blir singleton
+
+    private SchoolApp() {
         scanner = new Scanner(System.in);
         userFactory = new UserFactory();
-        register = new Register();
+        sharedRegister = new Register();
     }
 
-    public void runProgram() {
-        //loadSchool();
+    public static synchronized SchoolApp getInstance() {
+        if (instance == null)
+            return new SchoolApp();
+        return instance;
+    }
+
+    private void runProgram() {
+        loadSchool();
         initUsers();
         initSubjects();
 
@@ -56,7 +66,7 @@ public class School {
             saveAndExit();
     }
 
-    public void selectAction(String selection) {
+    private void selectAction(String selection) {
         if (selection.equals("1")) {
             saveAndExit();
         }
@@ -86,7 +96,7 @@ public class School {
         }
     }
 
-    public void validateUser() {
+    private void validateUser() {
         int id;
         String username;
 
@@ -130,11 +140,12 @@ public class School {
         }
 
         for (Users user : register.getUsers()) {
-            System.out.println(user.getUsername() + " " + user.getID());
+            System.out.print(user.getUsername() + " " + user.getID() + ", ");
         }
+        System.out.println();
     }
 
-    public void initSubjects() {
+    private void initSubjects() {
         if (register.getSubjects().isEmpty()) {
             register.getSubjects().add(new Subject("Geography", 6));
             register.getSubjects().add(new Subject("Math", 6));
@@ -153,25 +164,57 @@ public class School {
         }
     }
 
-    public void saveAndExit() {
-        gson = new GsonBuilder().setPrettyPrinting().create();
-        String json = gson.toJson(register.getSubjects());
-        System.out.println(json);
-        System.out.println("Exiting program");
-        loadSchool(json);
-        //System.exit(0);
+    private void saveAndExit() {
+        //add Factory Json
+
+        try (FileWriter subjectWriter = new FileWriter("src/database/subjects.json");
+             FileWriter userWriter = new FileWriter("src/database/users.json"))  {
+
+            gson = new GsonBuilder().registerTypeAdapter(Users.class, new UsersSerializer()).setPrettyPrinting().create();
+            gson.toJson(register.getSubjects(), subjectWriter);
+
+            Type typeToken = new TypeToken<List<Users>>() {}.getType();
+            gson.toJson(register.getUsers(), typeToken, userWriter);
+            System.out.println("Data saved, Exiting program");
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to save data" + e.getMessage());
+        }
+        System.exit(0);
     }
 
-    public void loadSchool(String json) {
-        //ta bort parameter - använd fil
-        Type subjectList = new TypeToken<ArrayList<Subject>>() {}.getType();
-        List<Subject> subjects = gson.fromJson(json, subjectList); //gör register.getSubjects(); istället
-        System.out.println("Deserialized list:");
-        //for (Subject subject : subjects) {
-        //    System.out.printf("%s\n%s\n,%s\n-%s\n", subject.getTitle(), subject.getTeacherID(), subject.getStudentResults() , subject.getAssignment().getStudentResults());
-        //}
+    private void loadSchool() {
 
-        //serialisera //de serialisera List<Users>
+        //Add factory Json
+        File temp = new File("src/database/subjects.json");
+        File temp2 = new File("src/database/users.json");
+
+        if (temp.exists() && temp2.exists()) {
+            System.out.println("Loading");
+
+            try (FileReader subjectReader = new FileReader(temp);
+                 FileReader userReader = new FileReader(temp2)) {
+                gson = new GsonBuilder()
+                        .registerTypeAdapter(Users.class, new UsersSerializer())
+                        .setPrettyPrinting()
+                        .create();
+
+                Type subjectList = new TypeToken<ArrayList<Subject>>() {}.getType();
+                register.setSubjects(gson.fromJson(subjectReader, subjectList));
+
+                Type typeToken = new TypeToken<List<Users>>() {}.getType();
+                register.setUsers(gson.fromJson(userReader, typeToken));
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
+    @Override
+    public void run() {
+        register = sharedRegister;
+        System.out.println(register); //inte samma, gör till Singleton???
+        runProgram();
+    }
 }

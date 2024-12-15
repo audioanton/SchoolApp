@@ -1,6 +1,8 @@
 public class Main {
     public static void main(String[] args) {
-        School school = new School();
-        school.runProgram();
+        SchoolApp schoolApp = SchoolApp.getInstance();
+        System.out.println(schoolApp);
+        Thread t = new Thread(schoolApp);
+        t.start();
     }
 }

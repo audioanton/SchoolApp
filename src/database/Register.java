@@ -1,7 +1,6 @@
 package database;
 
 import database.users.Users;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,5 +15,11 @@ public class Register {
 
     public List<Users> getUsers() {return users;}
 
+    public void setUsers(List<Users> users) {this.users = users;}
+
     public List<Subject> getSubjects() {return subjects;}
+
+    public void setSubjects(List<Subject> subjects) {
+        this.subjects = subjects;
+    }
 }
