@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Teacher implements Serializable, Users {
-    private final String username;
+    private final String username; //final inte serialiserbara med Gson
     private final int ID;
 
     public Teacher(String username, int ID) {
@@ -32,18 +32,17 @@ public class Teacher implements Serializable, Users {
         System.out.println("Teacher subjects:");
         for (Subject subject : subjects) {
             if (subject.getTeacherID() == this.ID) {
-                System.out.println("* " + subject);
-                System.out.println("Student IDs:");
-                System.out.println(subject.getStudentResults().keySet());
+                System.out.printf("* %s:\n  Assignment: %s\n  Students: %s\n\n", subject.getTitle(), subject.getAssignment().getTitle(), subject.getStudentResults().keySet());
             }
         }
     }
 
     @Override
     public void showUsers(List<Users> users) {
+        System.out.println("Students:");
         for (Users user : users) {
             if (user instanceof Student) {
-                System.out.println("* " + user.getUsername() + ": " + user.getID());
+                System.out.printf("* %s - ID: %s\n", user.getUsername(), user.getID());
             }
         }
     }
@@ -74,6 +73,7 @@ public class Teacher implements Serializable, Users {
     public void setGrade(Register register, Scanner scanner) {
         System.out.println("Set Grade");
         int studentID = -1;
+        int index = selectSubject(scanner, register);
 
         while (studentID < 0) {
             System.out.println("Student ID:");
@@ -86,16 +86,15 @@ public class Teacher implements Serializable, Users {
             }
         }
 
-        int index = selectSubject(scanner, register);
         System.out.println("Grade Assignment (a) or Subject (s):");
         String selection = scanner.nextLine().trim();
         System.out.println("Result - A / C / F:");
         String grade = scanner.nextLine().trim().toUpperCase();
         if (selection.startsWith("s")) {
             switch (grade) {
-                case "A": register.getSubjects().get(index).setStudentResult(Result.A, studentID); break;
-                case "C": register.getSubjects().get(index).setStudentResult(Result.C, studentID); break;
-                case "F": register.getSubjects().get(index).setStudentResult(Result.F, studentID); break;
+                case "A": register.getSubjects().get(index).putStudentResult(Result.A, studentID); break;
+                case "C": register.getSubjects().get(index).putStudentResult(Result.C, studentID); break;
+                case "F": register.getSubjects().get(index).putStudentResult(Result.F, studentID); break;
             }
         }
         else if (selection.startsWith("a")) {

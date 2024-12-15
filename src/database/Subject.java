@@ -33,12 +33,8 @@ public class Subject implements Serializable, Comparable<Subject> {
         this.assignment = assignment;
     }
 
-    public void setStudentResult(Result result, int ID) {
+    public void putStudentResult(Result result, int ID) {
         studentResults.replace(ID, result);
-    }
-
-    public Result getResult(int ID) {
-        return studentResults.get(ID);
     }
 
     @Override

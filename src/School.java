@@ -1,11 +1,16 @@
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import database.Register;
 import database.Result;
 import database.Subject;
 import database.users.*;
 
+import java.lang.reflect.Type;
 import java.util.*;
 
 public class School {
+    Gson gson;
     private Scanner scanner;
     UserFactory userFactory;
     Users user;
@@ -18,7 +23,7 @@ public class School {
     }
 
     public void runProgram() {
-        loadSchool();
+        //loadSchool();
         initUsers();
         initSubjects();
 
@@ -34,17 +39,21 @@ public class School {
             try {
                 user.showOptions();
                 String selection = scanner.nextLine().trim();
+                System.out.println();
                 selectAction(selection);
-                showMenu();
+                System.out.println();
+                returnToMenu();
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
     }
 
-    private void showMenu() {
-        System.out.println("Press any key to return to menu.");
-        String s = scanner.nextLine();
+    private void returnToMenu() {
+        System.out.println("Press \'E\' to exit, or any other key to return to menu.");
+        String s = scanner.nextLine().trim();
+        if (s.equalsIgnoreCase("e"))
+            saveAndExit();
     }
 
     public void selectAction(String selection) {
@@ -72,7 +81,6 @@ public class School {
         else if (selection.equals("5") && user instanceof Teacher) {
             user.setGrade(register, scanner);
         }
-
         else {
             System.out.println("Invalid Selection.");
         }
@@ -146,10 +154,24 @@ public class School {
     }
 
     public void saveAndExit() {
+        gson = new GsonBuilder().setPrettyPrinting().create();
+        String json = gson.toJson(register.getSubjects());
+        System.out.println(json);
         System.out.println("Exiting program");
-        System.exit(0);
+        loadSchool(json);
+        //System.exit(0);
     }
 
-    public void loadSchool() {}
+    public void loadSchool(String json) {
+        //ta bort parameter - använd fil
+        Type subjectList = new TypeToken<ArrayList<Subject>>() {}.getType();
+        List<Subject> subjects = gson.fromJson(json, subjectList); //gör register.getSubjects(); istället
+        System.out.println("Deserialized list:");
+        //for (Subject subject : subjects) {
+        //    System.out.printf("%s\n%s\n,%s\n-%s\n", subject.getTitle(), subject.getTeacherID(), subject.getStudentResults() , subject.getAssignment().getStudentResults());
+        //}
+
+        //serialisera //de serialisera List<Users>
+    }
 
 }

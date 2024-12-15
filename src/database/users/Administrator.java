@@ -29,20 +29,19 @@ public class Administrator implements Serializable, Users {
 
     @Override
     public void showUsers(List<Users> users) {
-        System.out.println(users.size());
         System.out.println("Students: ");
         for (Users user : users) {
             if (user instanceof Student) {
                 System.out.println(user.getUsername() + ", ID: " + user.getID());
             }
         }
-        System.out.println("Teachers:");
+        System.out.println("\nTeachers:");
         for (Users user : users) {
             if (user instanceof Teacher) {
                 System.out.println(user.getUsername() + ", ID: " + user.getID());
             }
         }
-        System.out.println("Admins:");
+        System.out.println("\nAdmins:");
         for (Users user : users) {
             if (user instanceof Administrator) {
                 System.out.println(user.getUsername() + ", ID: " + user.getID());
@@ -120,7 +119,7 @@ public class Administrator implements Serializable, Users {
             if (valid < 0)
                 throw new IllegalArgumentException("No such student");
 
-            System.out.println("Add (a) or remove (r) Student?");
+            System.out.println("Add (a) or remove (r) Student from Subject?");
             boolean add = scanner.nextLine().toLowerCase().startsWith("a");
             System.out.println("Subject: ");
             String subject = scanner.nextLine().trim();
@@ -130,7 +129,7 @@ public class Administrator implements Serializable, Users {
             if (index >= 0) {
                 if (add) {
                     register.getSubjects().get(index).addNewStudent(Result.INCOMPLETE, ID);
-                    System.out.println("Student added to ." + register.getSubjects().get(index).getTitle());
+                    System.out.println("Student added to " + register.getSubjects().get(index).getTitle());
                 }
                 else {
                     register.getSubjects().get(index).getStudentResults().remove(ID);

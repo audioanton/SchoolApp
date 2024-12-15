@@ -15,6 +15,14 @@ public class Assignment implements Serializable {
         studentResults = new HashMap<>();
     }
 
+    public HashMap<Integer, Result> getStudentResults() {
+        return studentResults;
+    }
+
+    public void setStudentResults(HashMap<Integer, Result> studentResults) {
+        this.studentResults = studentResults;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -25,7 +33,7 @@ public class Assignment implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("%s\n%s\n", title, description);
+        return String.format("* %s\n  %s\n", title, description);
     }
 
 }
