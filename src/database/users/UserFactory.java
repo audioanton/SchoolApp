@@ -5,7 +5,11 @@ public class UserFactory {
     private int uniqueID;
 
     public UserFactory() {
-        uniqueID = 0;
+        this.uniqueID = uniqueID;
+    }
+
+    public int getUniqueID() {
+        return uniqueID;
     }
 
     public Users createUser(UsersTypes type, String username) {

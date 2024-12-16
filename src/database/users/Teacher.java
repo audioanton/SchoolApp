@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Teacher implements Serializable, Users {
-    private final String username; //final inte serialiserbara med Gson
+    private final String username;
     private final int ID;
 
     public Teacher(String username, int ID) {

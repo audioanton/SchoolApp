@@ -8,31 +8,30 @@ import database.users.*;
 
 import java.io.*;
 import java.lang.reflect.Type;
+import java.net.IDN;
 import java.util.*;
 
-public class SchoolApp implements Runnable {
+public class SchoolApp {
     Gson gson;
     private Scanner scanner;
     UserFactory userFactory;
     Users user;
     private Register register;
-    private static Register sharedRegister;//blir inte synchroniserade...
-
-    static SchoolApp instance; //blir singleton
+    static SchoolApp instance;
 
     private SchoolApp() {
         scanner = new Scanner(System.in);
         userFactory = new UserFactory();
-        sharedRegister = new Register();
+        register = new Register();
     }
 
-    public static synchronized SchoolApp getInstance() {
+    public static SchoolApp getInstance() {
         if (instance == null)
             return new SchoolApp();
         return instance;
     }
 
-    private void runProgram() {
+    public void runProgram() {
         loadSchool();
         initUsers();
         initSubjects();
@@ -165,10 +164,10 @@ public class SchoolApp implements Runnable {
     }
 
     private void saveAndExit() {
-        //add Factory Json
 
         try (FileWriter subjectWriter = new FileWriter("src/database/subjects.json");
-             FileWriter userWriter = new FileWriter("src/database/users.json"))  {
+             FileWriter userWriter = new FileWriter("src/database/users.json");
+             FileWriter factoryWriter = new FileWriter("src/database/factory.json"))  {
 
             gson = new GsonBuilder().registerTypeAdapter(Users.class, new UsersSerializer()).setPrettyPrinting().create();
             gson.toJson(register.getSubjects(), subjectWriter);
@@ -176,6 +175,8 @@ public class SchoolApp implements Runnable {
             Type typeToken = new TypeToken<List<Users>>() {}.getType();
             gson.toJson(register.getUsers(), typeToken, userWriter);
             System.out.println("Data saved, Exiting program");
+
+            gson.toJson(userFactory, factoryWriter);
         } catch (IOException e) {
             throw new RuntimeException("Failed to save data" + e.getMessage());
         }
@@ -184,15 +185,16 @@ public class SchoolApp implements Runnable {
 
     private void loadSchool() {
 
-        //Add factory Json
         File temp = new File("src/database/subjects.json");
         File temp2 = new File("src/database/users.json");
+        File temp3 = new File("src/database/factory.json");
 
-        if (temp.exists() && temp2.exists()) {
+        if (temp.exists() && temp2.exists() && temp3.exists()) {
             System.out.println("Loading");
 
             try (FileReader subjectReader = new FileReader(temp);
-                 FileReader userReader = new FileReader(temp2)) {
+                 FileReader userReader = new FileReader(temp2);
+                 FileReader factoryReader = new FileReader(temp3)) {
                 gson = new GsonBuilder()
                         .registerTypeAdapter(Users.class, new UsersSerializer())
                         .setPrettyPrinting()
@@ -203,18 +205,12 @@ public class SchoolApp implements Runnable {
 
                 Type typeToken = new TypeToken<List<Users>>() {}.getType();
                 register.setUsers(gson.fromJson(userReader, typeToken));
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
+
+                Type factoryType = new TypeToken<UserFactory>() {}.getType();
+                userFactory = gson.fromJson(factoryReader, factoryType);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
         }
-    }
-
-    @Override
-    public void run() {
-        register = sharedRegister;
-        System.out.println(register); //inte samma, gör till Singleton???
-        runProgram();
     }
 }
