@@ -8,9 +8,24 @@ public class Register {
     private List<Users> users;
     private List<Subject> subjects;
 
-    public Register() {
+    private static volatile Register instance;
+
+    private Register() {
         this.users = new ArrayList<>();
         this.subjects = new ArrayList<>();
+    }
+
+    public static Register getInstance() {
+        Register result = instance;
+        if (result != null) {
+            return result;
+        }
+        synchronized (Register.class) {
+            if (instance == null) {
+                return new Register();
+            }
+            return instance;
+        }
     }
 
     public List<Users> getUsers() {return users;}

@@ -8,33 +8,26 @@ import database.users.*;
 
 import java.io.*;
 import java.lang.reflect.Type;
-import java.net.IDN;
 import java.util.*;
 
-public class SchoolApp {
+public class SchoolApp implements Runnable {
     Gson gson;
     private Scanner scanner;
     UserFactory userFactory;
     Users user;
     private Register register;
-    static SchoolApp instance;
 
-    private SchoolApp() {
+    public SchoolApp() {
         scanner = new Scanner(System.in);
         userFactory = new UserFactory();
-        register = new Register();
-    }
-
-    public static SchoolApp getInstance() {
-        if (instance == null)
-            return new SchoolApp();
-        return instance;
+        register = Register.getInstance();
     }
 
     public void runProgram() {
         loadSchool();
         initUsers();
         initSubjects();
+        //System.out.println(register);
 
         while (user == null) {
             try {
@@ -212,5 +205,10 @@ public class SchoolApp {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void run() {
+        runProgram();
     }
 }

@@ -8,10 +8,6 @@ public class UserFactory {
         this.uniqueID = uniqueID;
     }
 
-    public int getUniqueID() {
-        return uniqueID;
-    }
-
     public Users createUser(UsersTypes type, String username) {
         switch (type) {
             case ADMIN: return new Administrator(username, ++uniqueID);
