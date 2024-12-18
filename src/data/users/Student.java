@@ -1,10 +1,10 @@
-package database.users;
-import database.Subject;
+package data.users;
+import data.Subject;
 import java.io.Serializable;
 import java.util.List;
 
 public class Student implements Serializable, Users {
-    String[] guardianContacts;
+    private String[] guardianContacts;
     private final int ID;
     private final String username;
 

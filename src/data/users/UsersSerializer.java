@@ -1,4 +1,4 @@
-package database.users;
+package data.users;
 import com.google.gson.*;
 import java.lang.reflect.Type;
 

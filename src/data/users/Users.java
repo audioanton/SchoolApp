@@ -1,7 +1,7 @@
-package database.users;
+package data.users;
 
-import database.Register;
-import database.Subject;
+import data.Register;
+import data.Subject;
 
 import java.util.List;
 import java.util.Scanner;
@@ -30,5 +30,5 @@ public interface Users extends Comparable<Users> {
 
     default void setGrade(Register register, Scanner scanner) {}
 
-    default void editStudentClasses(Register register, Scanner scanner) {}
+    default void editStudentSubjects(Register register, Scanner scanner) {}
 }

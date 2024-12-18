@@ -1,4 +1,4 @@
-package database.users;
+package data.users;
 
 
 public class UserFactory {

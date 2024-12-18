@@ -1,8 +1,8 @@
-package database.users;
-import database.Assignment;
-import database.Register;
-import database.Result;
-import database.Subject;
+package data.users;
+import data.Assignment;
+import data.Register;
+import data.Result;
+import data.Subject;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;

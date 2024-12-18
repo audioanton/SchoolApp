@@ -1,7 +1,7 @@
-package database.users;
-import database.Register;
-import database.Result;
-import database.Subject;
+package data.users;
+import data.Register;
+import data.Result;
+import data.Subject;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.InputMismatchException;
@@ -109,7 +109,7 @@ public class Administrator implements Serializable, Users {
     }
 
     @Override
-    public void editStudentClasses(Register register, Scanner scanner) {
+    public void editStudentSubjects(Register register, Scanner scanner) {
         try {
             System.out.println("Student ID: ");
             int ID = scanner.nextInt();

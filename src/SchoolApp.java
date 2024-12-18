@@ -1,20 +1,20 @@
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import database.Register;
-import database.Result;
-import database.Subject;
-import database.users.*;
+import data.Register;
+import data.Result;
+import data.Subject;
+import data.users.*;
 
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.*;
 
 public class SchoolApp implements Runnable {
-    Gson gson;
+    private Gson gson;
     private Scanner scanner;
-    UserFactory userFactory;
-    Users user;
+    private UserFactory userFactory;
+    private Users user;
     private Register register;
 
     public SchoolApp() {
@@ -27,7 +27,7 @@ public class SchoolApp implements Runnable {
         loadSchool();
         initUsers();
         initSubjects();
-        //System.out.println(register);
+        System.out.println(register);
 
         while (user == null) {
             try {
@@ -75,7 +75,7 @@ public class SchoolApp implements Runnable {
             user.editUser(register, userFactory, scanner);
         }
         else if (selection.equals("4") && user instanceof Administrator) {
-            user.editStudentClasses(register, scanner);
+            user.editStudentSubjects(register, scanner);
         }
         else if (selection.equals("4") && user instanceof Teacher) {
             user.createAssignment(register, scanner);
@@ -116,7 +116,7 @@ public class SchoolApp implements Runnable {
             throw new NullPointerException("No such user");
     }
 
-    public void initUsers() {
+    private void initUsers() {
         if (register.getUsers().isEmpty()) {
             register.getUsers().add(userFactory.createUser("Jamie", "1@gmail.com", "2@gmail.com"));
             register.getUsers().add(userFactory.createUser("Kylie", "1@gmail.com", "2@gmail.com"));
@@ -158,9 +158,9 @@ public class SchoolApp implements Runnable {
 
     private void saveAndExit() {
 
-        try (FileWriter subjectWriter = new FileWriter("src/database/subjects.json");
-             FileWriter userWriter = new FileWriter("src/database/users.json");
-             FileWriter factoryWriter = new FileWriter("src/database/factory.json"))  {
+        try (FileWriter subjectWriter = new FileWriter("src/data/subjects.json");
+             FileWriter userWriter = new FileWriter("src/data/users.json");
+             FileWriter factoryWriter = new FileWriter("src/data/factory.json"))  {
 
             gson = new GsonBuilder().registerTypeAdapter(Users.class, new UsersSerializer()).setPrettyPrinting().create();
             gson.toJson(register.getSubjects(), subjectWriter);
@@ -178,9 +178,9 @@ public class SchoolApp implements Runnable {
 
     private void loadSchool() {
 
-        File temp = new File("src/database/subjects.json");
-        File temp2 = new File("src/database/users.json");
-        File temp3 = new File("src/database/factory.json");
+        File temp = new File("src/data/subjects.json");
+        File temp2 = new File("src/data/users.json");
+        File temp3 = new File("src/data/factory.json");
 
         if (temp.exists() && temp2.exists() && temp3.exists()) {
             System.out.println("Loading");

@@ -1,6 +1,6 @@
-package database;
+package data;
 
-import database.users.Users;
+import data.users.Users;
 import java.util.ArrayList;
 import java.util.List;
 
